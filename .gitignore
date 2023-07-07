@@ -160,4 +160,4 @@ cython_debug/
 #.idea/
 
 #manually added
-./work_to_do.txt
+work_to_do.txt
