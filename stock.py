@@ -6,15 +6,16 @@ def SearchStock(db, item_code):
     stock_register = db.stock
     query = {"item_code":item_code}
     data = stock_register.find_one(query)
-    if len(data) !=0 :
-        return data[0]
-    else:
+    try:
+        if len(list(data.keys()))!=0 :
+            return data
+    except:
         return None
 
 #updating the stock collection after a sale
 def updateStockSales(db, data):
     stock_register = db.stock
-    details = SearchStock(db, data["item_code"])[0]
+    details = SearchStock(db, data["item_code"])
     rem_quantity = details["quantity"] - data['quantity']
     myquery = { "item_code": data["item_code"] }
     newvalues = { "$set": { "quantity": rem_quantity } }

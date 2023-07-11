@@ -1,5 +1,6 @@
 from database import *
 from datetime import date
+from stock import *
 
 #adding purchases made
 def addPurchase(db):
@@ -14,9 +15,9 @@ def addPurchase(db):
     bill_no = input("Enter bill number:-").upper()
 
     bill_content={}
-    bill_content['date'] = date.today()
-    bill_content['details'] = [] #containing all the bill entries
+    bill_content['date'] = str(date.today())
     total = 0
+    i=0
     #Getting each bill entry for the bill
     while True:
         choice = int(input("0.Done \n 1.Add more items\n"))
@@ -28,9 +29,11 @@ def addPurchase(db):
         data["rate"] = float(input("Enter the rate:-")) #purchase rate
         data["tax"] = float(input("Enter the tax amount:-")) #rate of tax
         data["quantity"] = int(input("Enter quantity:-")) #purchased quantity
-        data["amount"] = (rate+(tax)*0.01*rate)*quantity #calculating the item amount
+        data["amount"] = (data['rate']+(data["tax"])*0.01*data['rate'])*data['quantity'] #calculating the item amount
         total+=data["amount"] #updating total bill value
-        bill_content['details'] = bill_content['details'].append(data) #adding the entry to bill
+        bill_content[str(i)] = data #adding the entry to bill
+        i+=1
+
 
         #updating the stock register for the newly added product entry
         updateStockPurchase(db, data)
@@ -44,7 +47,7 @@ def addPurchase(db):
     x = p_register.insert_one(p_data)
 
     #adding the detailed bill to the bill collection
-    b_data = {"GSTIN":seller,"Bill_Number": bill_no,"bill_type": "PURCHASE","id":x.inserted_id, "details":bill_content}
+    b_data = {"GSTIN":seller,"Bill_Number": bill_no,"bill_type": "PURCHASE","id":x.inserted_id, "bill_content":bill_content}
     b_register.insert_one(b_data)
 
     #to update the finance collection

@@ -2,7 +2,6 @@ from database import *
 from stock import *
 from datetime import date
 
-db=database(user_gst)
 
 #adding purchases made
 def addSales(db):
@@ -23,9 +22,9 @@ def addSales(db):
     bill_no = input("Enter bill number:-").upper()
 
     bill_content={}
-    bill_content['date'] = date.today()
-    bill_content['details'] = []
+    bill_content['date'] = str(date.today())
     total = 0
+    i=0
 
     #getting each bill entry
     while True:
@@ -39,12 +38,16 @@ def addSales(db):
         #checking if item is availabel or not
         stock_details = SearchStock(db, code)
 
-        if stock_details: #if item is available get corresponding details from the stock collection
+        if stock_details is not None: #if item is available get corresponding details from the stock collection
             data["item_code"] = code
             data["item_name"] = stock_details["item_name"]
             data["rate"] = stock_details["rate"]
             data["tax"] = stock_details["tax"]
             available_quantity = stock_details["quantity"]
+
+            if available_quantity == 0:
+                print("No stock available !")
+                continue
 
             required_quantity =  int(input("Enter quantity:-"))
 
@@ -61,7 +64,7 @@ def addSales(db):
             data["amount"] = (data["rate"]+(data["tax"])*0.01*data["rate"])*required_quantity
             total+=data["amount"]
             #adding the product entry in the bill
-            bill_content['details'] = bill_content['details'].append(data)
+            bill_content[str(i)] = data
 
             #updating the stock based on the product sold
             updateStockSales(db, data)
@@ -72,14 +75,14 @@ def addSales(db):
     bill_content['amount']=total
 
     #whether the bill is paid or is on credit
-    paid = int(input("Enter 0 if not paid else enter 1"))
+    paid = int(input("Enter 0 if not paid else enter 1:-"))
 
     #updating the sales collection
     s_data ={"GSTIN":cust,"Name":name, "Bill_Number": bill_no, "amount" : total, "paid":paid}
     x = s_register.insert_one(s_data)
     
     #updating the bills collection
-    b_data = {"GSTIN":seller,"Bill_Number": bill_no,"bill_type": "SALES","id":x.inserted_id, "details":bill_content}
+    b_data = {"GSTIN":cust,"Bill_Number": bill_no,"bill_type": "SALES","id":x.inserted_id, "bill_content":bill_content}
     b_register.insert_one(b_data)
 
 
