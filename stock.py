@@ -32,8 +32,8 @@ def updateStockPurchase(db, data):
 
     #check whether the item exists in the stock collection or not
     check = SearchStock(db, data["item_code"])
-    if check: #if it exists, update the entries
-        details = check[0]
+    if check is not None: #if it exists, update the entries
+        details = check
         rem_quantity = details["quantity"] + data['quantity']
         myquery = { "item_code": data["item_code"] }
         newvalues = { "$set": { "quantity": rem_quantity , "rate":rate, "tax":tax, "amount":rate+tax} }

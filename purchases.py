@@ -1,6 +1,7 @@
 from database import *
 from datetime import date
 from stock import *
+from finance import *
 
 #adding purchases made
 def addPurchase(db):
@@ -52,5 +53,6 @@ def addPurchase(db):
 
     #to update the finance collection
     #adding functions to accept payments and handling finances
+    add_to_debit(db, [seller,total])
 
 

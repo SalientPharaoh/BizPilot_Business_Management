@@ -1,6 +1,7 @@
 from database import *
 from stock import *
 from datetime import date
+from finance import *
 
 
 #adding purchases made
@@ -65,7 +66,7 @@ def addSales(db):
             total+=data["amount"]
             #adding the product entry in the bill
             bill_content[str(i)] = data
-
+            i = i+1
             #updating the stock based on the product sold
             updateStockSales(db, data)
 
@@ -74,15 +75,30 @@ def addSales(db):
 
     bill_content['amount']=total
 
-    #whether the bill is paid or is on credit
-    paid = int(input("Enter 0 if not paid else enter 1:-"))
 
     #updating the sales collection
-    s_data ={"GSTIN":cust,"Name":name, "Bill_Number": bill_no, "amount" : total, "paid":paid}
+    s_data ={"GSTIN":cust,"Name":name, "Bill_Number": bill_no, "amount" : total}
     x = s_register.insert_one(s_data)
     
     #updating the bills collection
     b_data = {"GSTIN":cust,"Bill_Number": bill_no,"bill_type": "SALES","id":x.inserted_id, "bill_content":bill_content}
     b_register.insert_one(b_data)
 
+    #whether the bill is paid or is on credit
+    paid = int(input("Enter 0 if not paid else enter 1:-"))
 
+    if paid ==0:
+        add_to_credit(db, [cust,total])
+    else:
+        fin = db.finance
+        details = input("Enter 1 for cash, for cheque - Enter the cheque number:-")
+        if details=="1":
+            details="CASH"
+        data = {
+            "GSTIN":cust,
+            "Transaction_amount":total,
+            "date":str(date.today()),
+            "details":details,
+            "type":"CREDIT"
+        }
+        fin.insert_one(data)

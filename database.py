@@ -28,6 +28,8 @@ class database():
         self.purchase = db['purchases'] #contains all purchases made
         self.stock = db['stock'] #contains the details and rate of items
         self.finance = db['finance'] #contains all financial transaction details
+        self.debit = db['debit']
+        self.credit = db['credit']
         self.bills = db['bills'] #contains all sales and purchase bills
 
         if GSTIN.upper() not in dblist:
@@ -36,3 +38,5 @@ class database():
             self.stock.insert_one({'description':"All details about stock"})
             self.finance.insert_one({'description':"All details about finances"})
             self.bills.insert_one({'description':"All details about bills"})
+            self.debit.insert_one({'description':"All the pending outgoing payments"})
+            self.credit.insert_one({'description':"All the pending incoming payments"})
