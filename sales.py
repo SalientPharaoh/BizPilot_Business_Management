@@ -29,7 +29,7 @@ def addSales(db):
 
     #getting each bill entry
     while True:
-        choice = int(input("0.Done \n 1.Add more items\n"))
+        choice = 1
         if choice == 0:
             break
 
@@ -69,6 +69,8 @@ def addSales(db):
             i = i+1
             #updating the stock based on the product sold
             updateStockSales(db, data)
+        
+        choice = int(input("0.Done \n 1.Add more items\n"))
 
     #adding miscellaneous charges including transport, etc to the bill
     total+=float(input("Enter miscellaneous amount:-"))
@@ -102,3 +104,5 @@ def addSales(db):
             "type":"CREDIT"
         }
         fin.insert_one(data)
+
+    

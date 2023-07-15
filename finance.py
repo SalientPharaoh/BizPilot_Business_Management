@@ -32,22 +32,22 @@ def record_debit(db):
     if res is None:
         return
     amt = float(input("Enter the amount paid:-"))
-    date=str(date.today())
+    date_ = str(date.today())
     details=input("Enter 1 for cash, for check - enter the check number:-")
     if details == "1":
         details= "CASH"
-    transaction(db,res, amt, date, details,"DEBIT")
+    transaction(db,res, amt, date_, details,"DEBIT")
 
 def record_credit(db):
     res= check_status(db)
     if res is None:
         return
     amt = float(input("Enter the amount recieved:-"))
-    date=str(date.today())
+    date_=str(date.today())
     details=input("Enter 1 for cash, for check - enter the check number:-")
     if details == "1":
         details= "CASH"
-    transaction(db,res, amt, date, details,"CREDIT")
+    transaction(db,res, amt, date_, details,"CREDIT")
 
 
 def transaction(db,res, amt, date, details,type):
