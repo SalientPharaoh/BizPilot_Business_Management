@@ -20,8 +20,8 @@ def addPurchase(db):
     total = 0
     i=0
     #Getting each bill entry for the bill
+    choice = 1
     while True:
-        choice = int(input("0.Done \n 1.Add more items\n"))
         if choice == 0:
             break
         data={}
@@ -38,6 +38,8 @@ def addPurchase(db):
 
         #updating the stock register for the newly added product entry
         updateStockPurchase(db, data)
+
+        choice = int(input("0.Done \n 1.Add more items\n"))
 
     total+=float(input("Enter miscellaneous amount:-")) #total bill value after all expenses
 

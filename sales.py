@@ -28,8 +28,8 @@ def addSales(db):
     i=0
 
     #getting each bill entry
+    choice = 1
     while True:
-        choice = 1
         if choice == 0:
             break
 
