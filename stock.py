@@ -1,5 +1,6 @@
 from database import *
 from datetime import date
+from opt_stock import *
 
 #searching for the stock using item code and returning the search result
 def SearchStock(db, item_code):
@@ -27,8 +28,8 @@ def updateStockPurchase(db, data):
     #showing the purchase amount and getting the selling rate of the product
     print(f"The purchase rate of the product is :- {data['rate']}")
     print(f"The purchase tax rate of the product is :- {data['tax']}")
-    rate = float(input(f"Enter the selling rate of the product:-{data['item_code']}"))
-    tax = float(input(f"Enter the tax rate of the product:-{data['item_code']}"))
+    rate = float(input(f"Enter the selling rate of the product:-{data['item_code']}\n"))
+    tax = float(input(f"Enter the tax rate of the product:-{data['item_code']}\n"))
 
     #check whether the item exists in the stock collection or not
     check = SearchStock(db, data["item_code"])
@@ -48,3 +49,23 @@ def updateStockPurchase(db, data):
             "quantity":data["quantity"]
         }
         stock_register.insert_one(values)
+    
+def get_all(db):
+    stock_register = db.stock
+    all_data = stock_register.find()
+    data=[['item code','item name','rate','tax','amount','quantity']]
+    for document in all_data:
+        if 'item_code' in document:
+            data.append([document['item_code'],document['item_name'],document['rate'],document['tax'],document['amount'],document['quantity']])
+    
+    create_order(db,data)
+
+def create_order(db,data):
+    stock_register = db.stock
+    d = sorted(data[1:], key=lambda x : int(x[5]))
+    cost = int(input("Enter the available amount:- "))
+    n = len(d)
+    dlist = [[i[-2],i[-3],i[0],i[1]] for i in d]
+    process(cost,n,dlist)
+
+    

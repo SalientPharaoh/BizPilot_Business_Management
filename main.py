@@ -7,7 +7,7 @@ gst = input("Enter you GST Number:-").upper()
 db = database(gst)
 
 while True:
-    choice = int(input("1.Add purchase\n 2.Add Sales\n3.check debit\n4.check credit\n5.record debit\n6.record credit"))
+    choice = int(input("1.Add purchase\n 2.Add Sales\n3.check debit\n4.check credit\n5.record debit\n6.record credit\n7.Generate Optimum Purchase Order for the inventory\n"))
     if choice == 1:
         addPurchase(db)
     elif choice==2:
@@ -20,5 +20,7 @@ while True:
         record_debit(db)
     elif choice==6:
         record_credit(db)
+    elif choice==7:
+        get_all(db)
     else:
         break
